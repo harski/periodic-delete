@@ -11,9 +11,10 @@ use warnings;
 use Getopt::Long qw(:config no_ignore_case bundling);
 use POSIX qw(strftime);
 use Time::Local;
+use PeriodicFile;
 
 # TODO: For debug only
-use Data::Dumper;
+use Data::Dumper qw(Dumper);
 
 my %settings = (
 	action_help	=> 0,
@@ -41,6 +42,20 @@ GetOptions (
 );
 
 
+sub get_periodic_files {
+	my (@files, $pattern) = @_;
+	my @pfs;
+
+	for (@files) {
+		if (my $pf_ref = eval { PeriodicFile->new($_) }) {
+			push @pfs, $pf_ref;
+		}
+	}
+
+	return @pfs;
+}
+
+
 sub get_dir_files {
 	my $dir = shift;
 
@@ -59,9 +74,11 @@ sub get_dir_files {
 }
 
 sub main {
-	my $backup_dir = shift;
+	my $pf_dir = shift;
 
-	my @file_list = get_dir_files($backup_dir);
+	my @file_list = get_dir_files($pf_dir);
+
+	my @pfs = get_periodic_files(@file_list);
 
 	return 0;
 }
@@ -113,7 +130,17 @@ if ($settings{action_help}) {
 } elsif ($settings{action_version}) {
 	print_version();
 } else {
-	exit main();
+	if (@ARGV == 0) {
+		warn "Error: Specify a directory to handle.";
+		print_help();
+		exit 1;
+	} elsif (@ARGV == 1) {
+		main($ARGV[0]);
+	} else {
+		warn "Error: Too many arguments.";
+		print_help();
+		exit 2;
+	}
 }
 
 exit 0;
