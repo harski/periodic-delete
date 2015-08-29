@@ -41,7 +41,27 @@ GetOptions (
 );
 
 
+sub get_dir_files {
+	my $dir = shift;
+
+	opendir(my $dh, $dir) || die $!;
+	my @raw_files = grep { $_ ne '.' && $_ ne '..' } readdir($dh);
+	closedir($dh);
+
+	my @files;
+
+	for my $file (@raw_files) {
+		chomp $file;
+		push @files, "$dir/$file";
+	}
+
+	return @files;
+}
+
 sub main {
+	my $backup_dir = shift;
+
+	my @file_list = get_dir_files($backup_dir);
 
 	return 0;
 }
