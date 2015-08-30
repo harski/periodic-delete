@@ -41,9 +41,7 @@ sub get_cmp_str {
 	my $self = shift;
 	return $self->{year}
 	     . $self->{month}
-	     . $self->{day}
-	     . $self->{hour}
-	     . $self->{minute};
+	     . $self->{day};
 }
 
 
