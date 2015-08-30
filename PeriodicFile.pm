@@ -51,16 +51,16 @@ sub get_key {
 	my $key;
 
 	# match 'class' or 'classly'
-	given ($class) {
-		when (/year/)	{ $key = $self->{year} }
-		when (/month/)	{ $key = $self->{year}
-					.$self->{month} }
-		when (/week/)	{ $key = $self->{year}
-					.'-'
-					.$self->{week} }
-		when (/day/)	{ $key = $self->{year}
-					.$self->{month}
-					.$self->{day} }
+	if ($class =~ /year/) {
+		$key = $self->{year};
+	} elsif ($class =~ /month/) {
+		$key = $self->{year} . $self->{month};
+	} elsif ($class =~ /week/) {
+		$key = $self->{year} . '-' . $self->{week};
+	} elsif ($class eq 'day' or $class eq 'daily') {
+		$key = $self->{year} . $self->{month} . $self->{day};
+	} else {
+		croak("No key found for class '$class'");
 	}
 
 	return $key;
