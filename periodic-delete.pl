@@ -8,13 +8,13 @@ use strict;
 use version; our $VERSION = qv('0.0.1');
 use warnings;
 
+use File::Path qw(remove_tree);
 use Getopt::Long qw(:config no_ignore_case bundling);
 use POSIX qw(strftime);
 use Time::Local;
-use PeriodicFile;
 
-# TODO: For debug only
-use Data::Dumper qw(Dumper);
+use PeriodicFile;
+use PeriodicFileList;
 
 my %settings = (
 	action_help	=> 0,
@@ -76,9 +76,30 @@ sub get_dir_files {
 sub main {
 	my $pf_dir = shift;
 
-	my @file_list = get_dir_files($pf_dir);
+	my $pf_list = PeriodicFileList->new($settings{keep_yearly},
+					    $settings{keep_monthly},
+					    $settings{keep_weekly},
+					    $settings{keep_daily}
+					   );
 
+	# get files
+	my @file_list = get_dir_files($pf_dir);
 	my @pfs = get_periodic_files(@file_list);
+
+	for my $pf_ref (@pfs) {
+		$pf_list->add($pf_ref);
+	}
+
+	for my $pf_ref (@pfs) {
+		if (not $pf_list->contains($pf_ref)) {
+			# Extra, delete it
+			if ($settings{pretend}) {
+				say "rm -rf $pf_ref->{path}";
+			} else {
+				remove_tree($pf_ref->{path});
+			}
+		}
+	}
 
 	return 0;
 }
@@ -123,7 +144,6 @@ Licensed under the 2-clause BSD license.
 PRINT_VERSION
 }
 
-print Dumper(%settings);
 
 if ($settings{action_help}) {
 	print_help();
