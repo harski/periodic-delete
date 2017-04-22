@@ -2,6 +2,7 @@
 
 testdir="test"
 year_str=2015
+time_str=1122
 
 for month in `seq 1 12`; do
 	mon_str=$month
@@ -16,7 +17,7 @@ for month in `seq 1 12`; do
 			day_str="0$day_str"
 		fi
 
-		mkdir -p $testdir/$year_str-$mon_str-$day_str
+		mkdir -p $testdir/$year_str-$mon_str-$day_str-$time_str
 
 	done
 done
