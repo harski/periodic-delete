@@ -1,0 +1,6 @@
+MANIFEST
+Makefile.PL
+bin/periodic-delete
+lib/PeriodicDelete.pm
+lib/PeriodicDelete/File.pm
+lib/PeriodicDelete/FileList.pm
