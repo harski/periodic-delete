@@ -49,6 +49,8 @@ sub get_periodic_files {
 	for (@files) {
 		if (my $pf_ref = eval { PeriodicDelete::File->new($_) }) {
 			push @pfs, $pf_ref;
+		} else {
+			if ($@) { print "$@"; }
 		}
 	}
 
