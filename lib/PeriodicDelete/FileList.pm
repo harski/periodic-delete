@@ -1,4 +1,4 @@
-package PeriodicFileList;
+package PeriodicDelete::FileList;
 
 use v5.20;
 use strict;

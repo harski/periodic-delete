@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2015 Tuomo Hartikainen <tth@harski.org>.
+# Copyright 2017 Tuomo Hartikainen <tth@harski.org>.
 # Licensed under the 2-clause BSD license, see LICENSE for details.
 
 use v5.20;
@@ -13,8 +13,8 @@ use Getopt::Long qw(:config no_ignore_case bundling);
 use POSIX qw(strftime);
 use Time::Local;
 
-use PeriodicFile;
-use PeriodicFileList;
+use PeriodicDelete::File;
+use PeriodicDelete::FileList qw(:ALL);
 
 my %settings = (
 	action_help	=> 0,
@@ -47,7 +47,7 @@ sub get_periodic_files {
 	my @pfs;
 
 	for (@files) {
-		if (my $pf_ref = eval { PeriodicFile->new($_) }) {
+		if (my $pf_ref = eval { PeriodicDelete::File->new($_) }) {
 			push @pfs, $pf_ref;
 		}
 	}
@@ -76,11 +76,12 @@ sub get_dir_files {
 sub main {
 	my $pf_dir = shift;
 
-	my $pf_list = PeriodicFileList->new($settings{keep_yearly},
-					    $settings{keep_monthly},
-					    $settings{keep_weekly},
-					    $settings{keep_daily}
-					   );
+	my $pf_list = PeriodicDelete::FileList->new(
+			$settings{keep_yearly},
+			$settings{keep_monthly},
+			$settings{keep_weekly},
+			$settings{keep_daily}
+			);
 
 	# get files
 	my @file_list = get_dir_files($pf_dir);
@@ -144,23 +145,24 @@ Licensed under the 2-clause BSD license.
 PRINT_VERSION
 }
 
-
-if ($settings{action_help}) {
-	print_help();
-} elsif ($settings{action_version}) {
-	print_version();
-} else {
-	if (@ARGV == 0) {
-		warn "Error: Specify a directory to handle.";
+sub run {
+	if ($settings{action_help}) {
 		print_help();
-		exit 1;
-	} elsif (@ARGV == 1) {
-		main($ARGV[0]);
+	} elsif ($settings{action_version}) {
+		print_version();
 	} else {
-		warn "Error: Too many arguments.";
-		print_help();
-		exit 2;
+		if (@ARGV == 0) {
+			warn "Error: Specify a directory to handle.";
+			print_help();
+			exit 1;
+		} elsif (@ARGV == 1) {
+			main($ARGV[0]);
+		} else {
+			warn "Error: Too many arguments.";
+			print_help();
+			exit 2;
+		}
 	}
 }
 
-exit 0;
+1;

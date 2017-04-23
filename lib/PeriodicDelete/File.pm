@@ -3,7 +3,7 @@
 # Copyright 2015 Tuomo Hartikainen <tth@harski.org>.
 # Licensed under the 2-clause BSD license, see LICENSE for details.
 
-package PeriodicFile;
+package PeriodicDelete::File;
 
 use v5.20;
 use strict;
