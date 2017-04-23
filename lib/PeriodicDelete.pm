@@ -76,6 +76,11 @@ sub get_dir_files {
 sub main {
 	my $pf_dir = shift;
 
+	# check that dir exists
+	if (! -d $pf_dir) {
+		die "Directory '$pf_dir' does not exist. Quitting...";
+	}
+
 	my $pf_list = PeriodicDelete::FileList->new(
 			$settings{keep_yearly},
 			$settings{keep_monthly},
