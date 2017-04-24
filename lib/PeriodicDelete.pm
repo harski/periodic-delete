@@ -32,7 +32,7 @@ my %settings = (
 GetOptions (
 	'keep-yearly|y=i'	=> \$settings{keep_yearly},
 	'keep-monthly|m=i'	=> \$settings{keep_monthly},
-	'keep-weekly|m=i'	=> \$settings{keep_weekly},
+	'keep-weekly|w=i'	=> \$settings{keep_weekly},
 	'keep-daily|d=i'	=> \$settings{keep_daily},
 
 	'help|h|usage'		=> \$settings{action_help},
