@@ -5,7 +5,7 @@
 
 use v5.20;
 use strict;
-use version; our $VERSION = qv('0.0.1');
+use version; our $VERSION = qv('0.1.0');
 use warnings;
 
 use File::Path qw(remove_tree);
